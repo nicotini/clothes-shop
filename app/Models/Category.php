@@ -19,7 +19,7 @@ class Category extends Model
 
     public function childrenCategories()
     {
-        return $this->hasMany(Category::class)->with('categories','category_id', 'id');
+        return $this->hasMany(Category::class)->with('categories');
     }
     public function products()
     {
