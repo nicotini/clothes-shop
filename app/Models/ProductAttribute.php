@@ -9,6 +9,6 @@ class ProductAttribute extends Model
 {
     use HasFactory;
 
-    protected $tables = 'product_attributes';
+    protected $tables = 'product_attribute_values';
     protected $guarded = false;
 }

@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Main\IndexController;
+use App\Http\Controllers\Shop\IndexController as ShopIndexController;
+use App\Http\Controllers\Shop\ProductFilterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group([], function() {
+    Route::get('/', IndexController::class)->name('index');
+});
+Route::prefix('shop')->name('shop.')->group(function() {
+    Route::get('/', ShopIndexController::class)->name('index');
+    Route::post('/', ProductFilterController::class)->name('filter');
 });

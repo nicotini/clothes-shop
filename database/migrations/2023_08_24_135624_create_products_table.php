@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('slug', 255);
             $table->unsignedBigInteger('category_id')->nullable();
             $table->decimal('price', 10, 2);
+            $table->unsignedBigInteger('quantity')->default(0);
             $table->timestamps();
         });
     }

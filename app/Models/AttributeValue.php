@@ -16,4 +16,15 @@ class AttributeValue extends Model
     {
         return $this->belongsTo(Attribute::class, 'attribute_id', 'id');
     }
+    public function getValueNameById($attribute_value_id)
+    {
+        $attributeValue = $this->find($attribute_value_id);
+
+        if ($attributeValue) {
+            return $attributeValue->name;
+        }
+
+        return 'no';
+    }
+    
 }
