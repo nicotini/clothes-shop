@@ -9,14 +9,14 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
 
     <!-- ======= All CSS Plugins here ======== -->
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/swiper-bundle.min.css')}}">
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/glightbox.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/swiper-bundle.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/glightbox.min.css') }}">
     <link
         href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Karma:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
     <!-- Plugin css -->
-    <link rel="stylesheet" href="{{asset('assets/css/vendor/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/bootstrap.min.css') }}">
 
     <!-- Custom Style CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
@@ -930,7 +930,39 @@
                                     <span class="visually-hidden">Search</span>
                                 </a>
                             </li>
-                            <li class="header__account--items">
+
+
+                            @if (Route::has('login'))
+
+                                @auth
+                                    <a href="route('profile.edit')">
+                                        {{ __('Profile') }}
+                                    </a>
+                                    <!-- Authentication -->
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <a href="route('logout')"
+                                            onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                            {{ __('Log Out') }}
+                                        </a>
+                                    </form>
+                                @else
+                                    <li class="header__account--items">
+                                        <a href="{{ route('login') }}"
+                                            class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log
+                                            in</a>
+                                    </li>
+                                    @if (Route::has('register'))
+                                        <li class="header__account--items">
+                                            <a href="{{ route('register') }}"
+                                                class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>
+                                        </li>
+                                    @endif
+                                @endauth
+
+                            @endif
+                            {{--  <li class="header__account--items">
                                 <a class="header__account--btn d-sm-2-none" href="wishlist.html">
                                     <span class="header__account--btn__icon">
                                         <svg width="17" height="17" viewBox="0 0 17 17" fill="none"
@@ -961,7 +993,7 @@
                                     </span>
                                     <span class="visually-hidden">My Account</span>
                                 </a>
-                            </li>
+                            </li> --}}
                             <li class="header__account--items header__minicart--items">
                                 <a class="header__account--btn minicart__open--btn" href="javascript:void(0)"
                                     data-offcanvas>

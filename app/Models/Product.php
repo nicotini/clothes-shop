@@ -12,14 +12,29 @@ class Product extends Model
     protected $table = 'products';
     protected $guarded = false;
 
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
-    public function attributes()
+    /* public function attributes()
     {
         return $this->belongsToMany(Attribute::class, 'product_attributes', 'product_id', 'attribute_id')
         ->withPivot('attribute_value_id', 'quantity');
+    } */
+    
+    /* public function attributes()
+    {
+        return $this->hasManyThrough(Attribute::class, ProductAttribute::class, 'product_id', 'id', 'id', 'attribute_id');
+    } */
+
+    public function productAttributes()
+    {
+        return $this->hasMany(ProductAttribute::class, 'product_id');
     }
-   
+
+    
+
+    
+
 }

@@ -20,4 +20,12 @@ class Attribute extends Model
     {
         return $this->belongsToMany(Product::class, 'product_attributes')->withPivot('attribute_value_id');
     }
+
+    public function getProductValues()
+    {
+        return $this->hasManyThrough(AttributeValue::class, ProductAttribute::class, 'attribute_id', 'id', 'id', 'attribute_value_id');
+    }
+
+
+    
 }
