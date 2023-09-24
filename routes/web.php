@@ -6,6 +6,10 @@ use App\Http\Controllers\Main\IndexController;
 use App\Http\Controllers\Shop\IndexController as ShopIndexController;
 use App\Http\Controllers\Shop\ProductFilterController;
 use App\Http\Controllers\Cart\AddToCartController;
+use App\Http\Controllers\Cart\IndexController as CartIndexController;
+use App\Http\Controllers\Cart\Product\DestroyController as CartProductDestroyController;
+use App\Http\Controllers\Cart\DestroyController as CartDestroyController;
+use App\Http\Controllers\Cart\UpdateController as CartUpdateController;
 
 
 /*
@@ -32,6 +36,11 @@ Route::prefix('shop')->name('shop.')->group(function() {
 });
 Route::prefix('cart')->name('cart.')->group( function() {
     Route::post('/', AddToCartController::class)->name('add');
+    Route::get('/', CartIndexController::class)->name('index');
+    Route::delete('/{id}', CartProductDestroyController::class)->name('delete');
+    Route::delete('/', CartDestroyController::class)->name('delete.cart');
+    Route::patch('/{id}', CartUpdateController::class)->name('update');
+    
 });
 
 

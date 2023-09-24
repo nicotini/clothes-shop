@@ -995,8 +995,8 @@
                                 </a>
                             </li> --}}
                             <li class="header__account--items header__minicart--items">
-                                <a class="header__account--btn minicart__open--btn" href="javascript:void(0)"
-                                    data-offcanvas>
+                                <a class="header__account--btn minicart__open--btn" href="{{ route('cart.index')}}"
+                                    >
                                     <span class="header__account--btn__icon">
                                         <svg width="17" height="17" viewBox="0 0 17 17" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -1006,7 +1006,7 @@
                                                 stroke-linejoin="round" />
                                         </svg>
                                     </span>
-                                    <span class="items__count">2</span>
+                                    <span class="items__count">0</span>
                                 </a>
                             </li>
                         </ul>
@@ -1247,98 +1247,6 @@
             </ul>
         </div>
         <!-- End Offcanvas sticky toolbar -->
-
-        <!-- Start offCanvas minicart -->
-        <div class="offCanvas__minicart">
-            <div class="minicart__header ">
-                <div class="minicart__header--top d-flex justify-content-between align-items-center">
-                    <h3 class="minicart__title"> Shopping Cart</h3>
-                    <button class="minicart__close--btn" aria-label="minicart close btn" data-offcanvas>
-                        <svg class="minicart__close--icon" xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 512 512">
-                            <path fill="currentColor" stroke="currentColor" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-width="32" d="M368 368L144 144M368 144L144 368" />
-                        </svg>
-                    </button>
-                </div>
-                <p class="minicart__header--desc">The Beauty and Cosmetic products are limited</p>
-            </div>
-            <div class="minicart__product">
-                <div class="minicart__product--items d-flex">
-                    <div class="minicart__thumb">
-                        <a href="product-details.html"><img src="assets/img/product/small-product/product1.webp"
-                                alt="prduct-img"></a>
-                    </div>
-                    <div class="minicart__text">
-                        <h4 class="minicart__subtitle"><a href="product-details.html">Z 7-8mm Button is </a></h4>
-                        <span class="color__variant"><b>Color:</b> Beige</span>
-                        <div class="minicart__price">
-                            <span class="minicart__current--price">$125.00</span>
-                            <span class="minicart__old--price">$140.00</span>
-                        </div>
-                        <div class="minicart__text--footer d-flex align-items-center">
-                            <div class="quantity__box minicart__quantity">
-                                <button type="button" class="quantity__value decrease"
-                                    aria-label="quantity value" value="Decrease Value">-</button>
-                                <label>
-                                    <input type="number" class="quantity__number" value="1" data-counter />
-                                </label>
-                                <button type="button" class="quantity__value increase"
-                                    aria-label="quantity value" value="Increase Value">+</button>
-                            </div>
-                            <button class="minicart__product--remove" type="button">Remove</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="minicart__product--items d-flex">
-                    <div class="minicart__thumb">
-                        <a href="product-details.html"><img src="assets/img/product/small-product/product2.webp"
-                                alt="prduct-img"></a>
-                    </div>
-                    <div class="minicart__text">
-                        <h4 class="minicart__subtitle"><a href="product-details.html">Z 7-8mm Button is
-                            </a></h4>
-                        <span class="color__variant"><b>Color:</b> Green</span>
-                        <div class="minicart__price">
-                            <span class="minicart__current--price">$115.00</span>
-                            <span class="minicart__old--price">$130.00</span>
-                        </div>
-                        <div class="minicart__text--footer d-flex align-items-center">
-                            <div class="quantity__box minicart__quantity">
-                                <button type="button" class="quantity__value decrease"
-                                    aria-label="quantity value" value="Decrease Value">-</button>
-                                <label>
-                                    <input type="number" class="quantity__number" value="1" data-counter />
-                                </label>
-                                <button type="button" class="quantity__value increase"
-                                    aria-label="quantity value" value="Increase Value">+</button>
-                            </div>
-                            <button class="minicart__product--remove" type="button">Remove</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="minicart__amount">
-                <div class="minicart__amount_list d-flex justify-content-between">
-                    <span>Sub Total:</span>
-                    <span><b>$240.00</b></span>
-                </div>
-                <div class="minicart__amount_list d-flex justify-content-between">
-                    <span>Total:</span>
-                    <span><b>$240.00</b></span>
-                </div>
-            </div>
-            <div class="minicart__conditions text-center">
-                <input class="minicart__conditions--input" id="accept" type="checkbox">
-                <label class="minicart__conditions--label" for="accept">I agree with the <a
-                        class="minicart__conditions--link" href="privacy-policy.html">Privacy Policy</a></label>
-            </div>
-            <div class="minicart__button d-flex justify-content-center">
-                <a class="primary__btn minicart__button--link" href="cart.html">View cart</a>
-                <a class="primary__btn minicart__button--link" href="checkout.html">Checkout</a>
-            </div>
-        </div>
-        <!-- End offCanvas minicart -->
 
         <!-- Start serch box area -->
         <div class="predictive__search--box ">
