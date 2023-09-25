@@ -114,6 +114,33 @@ class CartService
         }
     }
 
+    public function calculateTotalSum($cart)
+    {
+        $totalSum = 0;
+        if ($cart) {
+            foreach ($cart->cartItems as $cartItem) {
+                $product = $cartItem->product;
+                $quantity = $cartItem->quantity;
+
+                // Calculate the sum for each product item
+                $itemSum = $this->calculateProductSum($product, $quantity);
+
+                // Store the item sum in the cart item
+                $cartItem->itemSum = $itemSum;
+
+                // Add the item sum to the total sum
+                $totalSum += $itemSum;
+            }
+
+            return $totalSum;
+        }
+    }
+
+    public function calculateProductSum($product, $quantity)
+    {
+        return $product->price * $quantity;
+    }
+
     public function findProductId($id)
     {
         $findingProdId = null;
@@ -146,7 +173,6 @@ class CartService
 
     public function updateAmountItemsInCart($data, $id)
     {
-
         $productToUpdate = $this->findProductId($id);
         if ($productToUpdate) {
             $productToUpdate->update(['quantity' => $data['product_quantity']]);

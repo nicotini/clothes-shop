@@ -21,8 +21,14 @@ class IndexController extends Controller
       $cart = $this->cartService->getCart();
       $cartItems = $this->cartService->getCartItems($cart);
       $totalQuantity = $this->cartService->calculateTotalQuantity($cart);
+      $totalSum = $this->cartService->calculateTotalSum($cart);
+      
+         
+        
+      
+      
 
-      return view('cart.index', compact('cart', 'cartItems', 'totalQuantity'));
+      return view('cart.index', compact('cart', 'cartItems', 'totalQuantity','totalSum'));
       
    }
 }

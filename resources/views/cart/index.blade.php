@@ -117,7 +117,7 @@
 
                                                 <td class="cart__table--body__list">
                                                     <span
-                                                        class="cart__price end">{{ (int) $cartItem->quantity * (int) $cartItem->product->price }}</span>
+                                                        class="cart__price end"> {{$cartItem->product->price * $cartItem->quantity}}</span>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -152,7 +152,9 @@
                                             </tr>
                                             <tr class="cart__summary--total__list">
                                                 <td class="cart__summary--total__title text-left">GRAND TOTAL</td>
-                                                <td class="cart__summary--amount text-right">$860.00</td>
+                                                <td class="cart__summary--amount text-right">@if ($totalSum)
+                                                    
+                                                {{ $totalSum }}@endif</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -167,6 +169,12 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    @else
+                    <div>
+                    <p>Your cart is empty</p>
+                    <a class="continue__shopping--link" href="{{ route('shop.index') }}">
+                    Back to the shop</a>
                     </div>
                 @endif
             </div>
