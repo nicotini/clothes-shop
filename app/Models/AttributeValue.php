@@ -23,8 +23,6 @@ class AttributeValue extends Model
         if ($attributeValue) {
             return $attributeValue->name;
         }
-
-        return 'no';
     }
     
 }

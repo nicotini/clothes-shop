@@ -11,4 +11,15 @@ class ProductAttribute extends Model
 
     protected $tables = 'product_attribute_values';
     protected $guarded = false;
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function attribute()
+    {
+        return $this->belongsTo(Attribute::class);
+    }
+    
 }
