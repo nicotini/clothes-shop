@@ -164,7 +164,7 @@
                                     <ul class="d-flex justify-content-between">
 
                                         <li><a class="cart__summary--footer__btn primary__btn checkout"
-                                                href="checkout.html">Check Out</a></li>
+                                                href="{{ route('checkout.index')}}">Check Out</a></li>
                                     </ul>
                                 </div>
                             </div>

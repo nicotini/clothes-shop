@@ -67,7 +67,7 @@
                                                         <div class="product__card--content text-center">
                                                             <input type="hidden" name="product_id"
                                                                 value="{{ $product->id }}">
-                                                            <input type="hidden" name="user_id" value="1">
+                                                            
                                                             <ul>
                                                                 <li>
                                                                     ({{ $product->category->name }})
