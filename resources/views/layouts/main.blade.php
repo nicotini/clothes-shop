@@ -766,7 +766,8 @@
                                                 stroke-linejoin="round" />
                                         </svg>
                                     </span>
-                                    <span class="items__count">0</span>
+                                    <span class="items__count">@if($totalQuantity){{ $totalQuantity }}@else 0 @endif</span>
+                                  
                                 </a>
                             </li>
                         </ul>

@@ -21,6 +21,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
+
+        view()->composer('*', function ($view) {
+            $cartService = app(CartService::class);
+            $cart = $cartService->getCart();
+            $totalQuantity = $cartService->calculateTotalQuantity($cart);
+            $view->with('totalQuantity', $totalQuantity);
+        });
     }
 }

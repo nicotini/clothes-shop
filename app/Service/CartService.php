@@ -107,7 +107,7 @@ class CartService
 
     public function calculateTotalQuantity($cart)
     {
-
+        $totalQuantity = 0;
         if ($cart && $cart->cartItems) {
             foreach ($cart->cartItems as $cartItem) {
                 $totalQuantity = $this->totalQuantity += $cartItem->quantity;
