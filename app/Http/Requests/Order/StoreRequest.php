@@ -27,7 +27,8 @@ class StoreRequest extends FormRequest
             'email' => 'required|email',
             'phone' => 'required|string',
             'card_id'=> 'required|integer',
-            'total_sum' => 'required|regex:/^\d+(\.\d{1,2})?$/'
+            'total_sum' => 'required|regex:/^\d+(\.\d{1,2})?$/',
+            'order_number' => 'string|nullable'
         ];
     }
 }

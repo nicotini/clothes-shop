@@ -68,9 +68,7 @@
                                                 placeholder="Mobile phone mumber" type="text" name="phone"
                                                 value="">
                                         </label>
-                                        
                                     </div>
-                                
                                 </div>
                                 <input type="hidden" name="card_id" value={{$cart->id }}>
                                 <input type="hidden" name="total_sum" value="{{ $totalSum }}">

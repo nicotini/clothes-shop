@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Service;
 
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -27,6 +27,10 @@ class OrderService
             return $cart->cartItems;
         }
     }
+    public function generateOrderNumber()
+    {
+        return 'N-'.now()->format('Ymd'). '-'. mt_rand(1000, 9999);
+    }
 
     public function saveToDatabase($data)
     {
@@ -38,14 +42,16 @@ class OrderService
                     'name' => $data['name'],
                     'email' => $data['email'],
                     'phone' => $data['phone'],
-                    'total_sum' => $data['total_sum']
+                    'total_sum' => $data['total_sum'],
+                    'order_number' => $this->generateOrderNumber()
                 ]);
             } else {
                 $order = new Order([
                     'name' => $data['name'],
                     'email' => $data['email'],
                     'phone' => $data['phone'],
-                    'total_sum' => $data['total_sum']
+                    'total_sum' => $data['total_sum'],
+                    'order_number' => $this->generateOrderNumber()
                 ]);
             }
 
@@ -71,8 +77,24 @@ class OrderService
         }
     }
 
-    public function getAllUserOrders()
+    public function getAllUserOrders($userId)
+    {    
+        if (Auth::check()) {
+            $user = User::findOrFail($userId);
+            return $user->orders;
+        }
+    }
+
+    public function getOrderById($id)
     {
-        
+        $order = Order::find($id);
+        return $order;
+    }
+
+    public function getOrderProducts($order)
+    {
+           if($order) {
+            return $order->orderItems;
+           }
     }
 }

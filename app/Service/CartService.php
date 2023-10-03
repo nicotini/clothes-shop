@@ -41,13 +41,14 @@ class CartService
 
     public function saveToDatabase($userId = null, $data)
     {
-
         $uuid = session('cart_uuid') ?? Str::uuid()->toString();
         session(['cart_uuid' => $uuid]);
+        
         try {
             DB::beginTransaction();
 
             $cart = $this->getCart();
+           // dd($cart);
             if ($cart) {
                 if ($userId !== null && $cart->user_id === null) {
                     // Обновляем user_id, если пользователь авторизовался
@@ -64,6 +65,7 @@ class CartService
                     $cart->uuid = $uuid;
                     $cart->save();
                 }
+                
             }
             $cartItems = $this->getCartItems($cart);
             $findingItem = false;
