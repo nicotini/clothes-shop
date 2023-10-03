@@ -11,6 +11,14 @@ use App\Http\Controllers\Cart\Product\DestroyController as CartProductDestroyCon
 use App\Http\Controllers\Cart\DestroyController as CartDestroyController;
 use App\Http\Controllers\Cart\UpdateController as CartUpdateController;
 
+use App\Http\Controllers\Checkout\IndexController as CheckoutController;
+use App\Http\Controllers\Checkout\StoreController as CheckoutStoreController;
+use App\Http\Controllers\Checkout\SuccessController as CheckoutSuccessController;
+
+use App\Http\Controllers\Order\IndexController as OrderIndexControlller;
+use App\Http\Controllers\Order\ShowController as OrderShowControlller;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +49,17 @@ Route::prefix('cart')->name('cart.')->group( function() {
     Route::delete('/', CartDestroyController::class)->name('delete.cart');
     Route::patch('/{id}', CartUpdateController::class)->name('update');
     
+});
+
+Route::prefix('checkout')->name('checkout.')->group( function() {
+    Route::get('/', CheckoutController::class)->name('index');
+    Route::post('/', CheckoutStoreController::class)->name('store');
+    Route::get('/success', CheckoutSuccessController::class)->name('success');
+});
+
+Route::prefix('order')->name('order.')->middleware('auth')->group( function() {
+    Route::get('/', OrderIndexControlller::class)->name('index');
+    Route::get('/{id}', OrderShowControlller::class)->name('show');
 });
 
 

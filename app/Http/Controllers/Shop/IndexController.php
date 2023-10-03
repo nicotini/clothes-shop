@@ -6,13 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Service\AttributeService;
 use App\Service\CategoryService;
-use App\Service\ProductService;
-use Illuminate\Http\Request;
 
 class IndexController extends Controller
 
 {
-
    protected $categoryService;
    protected $attributeService;
    protected $productService;
@@ -33,11 +30,7 @@ class IndexController extends Controller
       $max = Product::max('price');
       $min = Product::min('price');
       $products = Product::with('productAttributes')->paginate($perPage);
-
-
-
-
-
+   
       return view('shop.index', compact('products', 'categories', 'attributes', 'max', 'min'));
    }
 }
