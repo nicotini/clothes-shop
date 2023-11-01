@@ -26,6 +26,7 @@ class ProductFilterController extends Controller
     public function __invoke(FilterRequest $request, $perPage = 9)
     {        
         $filteredCategories = $request->input('filterCat', []);
+        dd($filteredCategories);
         $minPrice = $request->input('filterPriceMin', 0);
         $maxPrice = $request->input('filterPriceMax', PHP_FLOAT_MAX);
         $selectedAttributes = $request->input('filterAttr', []);

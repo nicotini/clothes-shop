@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use App\Models\Cart;
@@ -27,48 +28,74 @@ class OrderService
             return $cart->cartItems;
         }
     }
+    public function getTotalCartSum($cart)
+    {
+        $totalSum = 0;
+        if ($cart) {
+            $cartItems = $this->getCartItems($cart);
+            foreach ($cartItems as $cartItem) {
+                $cartItem->product;
+                $totalSum += $cartItem->quantity * $cartItem->product->price;
+            }
+        }
+        return $totalSum;
+    }
     public function generateOrderNumber()
     {
-        return 'N-'.now()->format('Ymd'). '-'. mt_rand(1000, 9999);
+        return 'N-' . now()->format('Ymd') . '-' . mt_rand(1000, 9999);
     }
 
-    public function saveToDatabase($data)
+    public function saveOrderItems($cart, $order)
+    {
+        if ($cart) {
+            $cartItems = $this->getCartItems($cart);
+            foreach ($cartItems as $cartItem) {
+                $orderItem = new OrderItem([
+                    'product_id' => $cartItem->product_id,
+                    'quantity' => $cartItem->quantity,
+                    'attributes' => $cartItem->attributes
+                ]);
+                $order->orderItems()->save($orderItem);
+            }
+        }
+        $cart->delete();
+    }
+
+    public function saveToDatabase($data, $cart)
     {
         try {
             DB::beginTransaction();
-            if (Auth::check()) {
-                $order = new Order([
-                    'user_id' => $data['id'],
-                    'name' => $data['name'],
-                    'email' => $data['email'],
-                    'phone' => $data['phone'],
-                    'total_sum' => $data['total_sum'],
-                    'order_number' => $this->generateOrderNumber()
-                ]);
-            } else {
-                $order = new Order([
-                    'name' => $data['name'],
-                    'email' => $data['email'],
-                    'phone' => $data['phone'],
-                    'total_sum' => $data['total_sum'],
-                    'order_number' => $this->generateOrderNumber()
-                ]);
-            }
 
+            $order = new Order([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'total_sum' => $this->getTotalCartSum($cart),
+                'order_number' => $this->generateOrderNumber()
+            ]);
             $order->save();
-            $cart = $this->getCartById($data['card_id']);
-            if ($cart) {
-                $cartItems = $this->getCartItems($cart);
-                foreach ($cartItems as $cartItem) {
-                    $orderItem = new OrderItem([
-                        'product_id' => $cartItem->product_id,
-                        'quantity' => $cartItem->quantity,
-                        'attributes' => $cartItem->attributes
-                    ]);
-                    $order->orderItems()->save($orderItem);
-                }
-            }
-            $cart->delete();
+            $this->saveOrderItems($cart, $order);
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error('Error saving order: ' . $exception->getMessage());
+            abort(500, 'An error occurred. Please try again later.');
+        }
+    }
+
+    public function saveToDBAuthUser($cart, $user)
+    {
+        try {
+            DB::beginTransaction();
+            $order = new Order([
+                'user_id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'total_sum' => $this->getTotalCartSum($cart),
+                'order_number' => $this->generateOrderNumber()
+            ]);
+            $order->save();
+
+            $this->saveOrderItems($cart, $order);
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
@@ -78,7 +105,7 @@ class OrderService
     }
 
     public function getAllUserOrders($userId)
-    {    
+    {
         if (Auth::check()) {
             $user = User::findOrFail($userId);
             return $user->orders;
@@ -93,8 +120,8 @@ class OrderService
 
     public function getOrderProducts($order)
     {
-           if($order) {
+        if ($order) {
             return $order->orderItems;
-           }
+        }
     }
 }

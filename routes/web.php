@@ -31,10 +31,6 @@ use App\Http\Controllers\Order\ShowController as OrderShowControlller;
 |
 */
 
-/* Route::get('/', function () {
-    return view('welcome');
-}); */
-
 Route::group([], function() {
     Route::get('/', IndexController::class)->name('index');
 });
@@ -48,7 +44,7 @@ Route::prefix('cart')->name('cart.')->group( function() {
     Route::delete('/{id}', CartProductDestroyController::class)->name('delete');
     Route::delete('/', CartDestroyController::class)->name('delete.cart');
     Route::patch('/{id}', CartUpdateController::class)->name('update');
-    
+
 });
 
 Route::prefix('checkout')->name('checkout.')->group( function() {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Cart;
+namespace App\Http\Controllers\Api\Cart;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cart\CartRequest;
@@ -15,16 +15,16 @@ class AddToCartController extends Controller
     {
         $this->cartService = $cartService;
     }
-
     public function __invoke(CartRequest $request)
     {
         $data = $request->validated();
-        if($user = auth()->user()) {
+        // $user = Auth::guard('sanctum')->user();
+        if($user = Auth::guard('sanctum')->user()) {
             $this->cartService->saveCartUser($user, $data);
         } else {
-            $this->cartService->saveToDatabase($data);  
-        }
+            $this->cartService->saveToDatabase($data);            
+        }        
         
-        return redirect()->route('shop.index');
+        return response()->json(['message' => 'Product added to cart successfully' , "user_id" => $user]);
     }
 }
