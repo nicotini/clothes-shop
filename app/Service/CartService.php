@@ -7,67 +7,54 @@ use App\Models\CartItems;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 class CartService
 {
     protected $totalQuantity = 0;
 
+    public function createCartToken()
+    {
+        return  Str::uuid()->toString();
+    }
+    public function setCartTokenToSession()
+    {
+        $uuid = $this->createCartToken();
+        Session::put('uuid_token', $uuid);
+        return $uuid;
+    }
+    public function getCartTokenFromSession()
+    {
+        return session('uuid_token');
+    }
+
+    public function getUserCart($user)
+    {
+        return  $user->cart;
+    }
 
     public function getCart()
     {
-        $user = Auth::user();
-        if (Auth::check()) {
-            // Для авторизованного пользователя
-            $cart = $user->cart;
+       /*  if ($user = Auth::guard('sanctum')->user()) {
+            return $user->cart;
         } else {
-            if (session()->has('cart_uuid')) {
-                $cartUuid = session('cart_uuid');
-                $cart = Cart::where('uuid', $cartUuid)->first();
-            } else {
-                $uuid = Str::uuid()->toString();
-                $cart = session(['cart_uuid' => $uuid]);
+            if ($uuid = $this->getCartTokenFromSession()) {
+                return Cart::where('uuid', $uuid)->first();
             }
+        } */
+        if ($uuid = $this->getCartTokenFromSession()) {
+            return Cart::where('uuid', $uuid)->first();
         }
-        return $cart;
+
+
+        return false;
     }
 
-    public function getCartItems($cart)
+    public function saveCartItemsToDB($data, $cart)
     {
-        if ($cart) {
-            return $cart->cartItems;
-        }
-    }
-
-    public function saveToDatabase($userId = null, $data)
-    {
-        $uuid = session('cart_uuid') ?? Str::uuid()->toString();
-        session(['cart_uuid' => $uuid]);
-        
         try {
-            DB::beginTransaction();
-
-            $cart = $this->getCart();
-           // dd($cart);
-            if ($cart) {
-                if ($userId !== null && $cart->user_id === null) {
-                    // Обновляем user_id, если пользователь авторизовался
-                    $cart->update(['user_id' => $userId]);
-                }
-            } else {
-
-                if ($userId !== null) {
-                    // Пользователь авторизован - связываем с его корзиной
-                    $cart = Cart::firstOrCreate(['user_id' => $userId], ['uuid' => $uuid]);
-                } else {
-                    // Пользователь не авторизован - создаем новую корзину
-                    $cart = new Cart();
-                    $cart->uuid = $uuid;
-                    $cart->save();
-                }
-                
-            }
-            $cartItems = $this->getCartItems($cart);
+            $cartItems = $cart->cartItems;
             $findingItem = false;
             $cartItem = new CartItems([
                 'product_id' => $data['product_id'],
@@ -92,6 +79,39 @@ class CartService
             } else {
                 $cart->cartItems()->save($cartItem);
             }
+        } catch (\Exception $e) {
+            Log::error('Error saving cart items: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+    public function saveCartUser($user, $data)
+    {
+        try {
+            $uuid = $this->getCartTokenFromSession() ?? $this->setCartTokenToSession();
+            
+
+            DB::beginTransaction();
+            $cart = $this->getCart();
+            if ($cart) {
+                if ($user->id !== null && $cart->user_id === null) {
+                    // Обновляем user_id, если пользователь авторизовался
+                    $cart->update(['user_id' => $user->id]);
+                   // $cart = Cart::firstOrCreate(['user_id' => $user->id], ['uuid' => $uuid]);
+                    
+                }
+                
+            } else {
+                if ($user->id !== null) {
+                    // Пользователь авторизован - связываем с его корзиной
+                    // $cart = Cart::firstOrCreate(['user_id' => $user->id], ['uuid' => $uuid]);
+                    $cart = new Cart();
+                    $cart->user_id = $user->id;
+                    $cart->uuid = $uuid;
+                    $cart->save();
+                }
+            }
+            
+            $this->saveCartItemsToDB($data, $cart);
 
             DB::commit();
 
@@ -100,6 +120,32 @@ class CartService
             DB::rollBack();
             Log::error($exception->getMessage());
             abort(500, 'An error occurred. Please try again later.');
+        }
+    }
+
+
+    public function saveToDatabase($data)
+    {
+        try {
+            $uuid = $this->getCartTokenFromSession() ?? $this->setCartTokenToSession();
+
+            DB::beginTransaction();
+            $cart = $this->getCart();
+                if (!$cart) {
+                    /* $cart = new Cart();
+                    $cart->uuid = $uuid;
+                    $cart->save();  */
+                    $cart = Cart::firstOrCreate(['uuid' => $uuid]);
+                } 
+           
+                $this->saveCartItemsToDB($data, $cart);
+            
+            DB::commit();
+          
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error('Error saving cart: ' . $exception->getMessage());
+            return response()->json(['message' => 'An error occurred. Please try again later.'], 500);
         }
     }
 
@@ -146,12 +192,13 @@ class CartService
     public function findProductId($id)
     {
         $findingProdId = null;
-        $cart = $this->getCart();
-        $cartItems = $this->getCartItems($cart);
+        if ($cart = $this->getCart()) {
+            $cartItems = $cart->cartItems;
 
-        foreach ($cartItems as $item) {
-            if ($item->product_id == $id) {
-                $findingProdId = $item;
+            foreach ($cartItems as $item) {
+                if ($item->product_id == $id) {
+                    $findingProdId = $item;
+                }
             }
         }
 
@@ -166,11 +213,10 @@ class CartService
     }
     public function clearCart()
     {
-        $cart = $this->getCart();
-        if (!$cart) {
-            return false;
+        if ($cart = $this->getCart()) {
+            return $cart->delete();
         }
-        return $cart->delete();
+        return false;
     }
 
     public function updateAmountItemsInCart($data, $id)

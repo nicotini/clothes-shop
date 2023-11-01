@@ -18,14 +18,13 @@ class IndexController extends Controller
 
    public function __invoke()
    {
+      $cartItems = false;
       $cart = $this->cartService->getCart();
-      $cartItems = $this->cartService->getCartItems($cart);
+            if(!empty($cart)) {
+         $cartItems = $cart->cartItems; 
+      }
       $totalQuantity = $this->cartService->calculateTotalQuantity($cart);
       $totalSum = $this->cartService->calculateTotalSum($cart);
-      
-         
-        
-      
       
 
       return view('cart.index', compact('cart', 'cartItems', 'totalQuantity','totalSum'));

@@ -70,8 +70,8 @@
                                         </label>
                                     </div>
                                 </div>
-                                <input type="hidden" name="card_id" value={{$cart->id }}>
-                                <input type="hidden" name="total_sum" value="{{ $totalSum }}">
+                                {{-- <input type="hidden" name="card_id" value={{$cart->id }}>
+                                <input type="hidden" name="total_sum" value="{{ $totalSum }}"> --}}
                         </div>
                         <div class="checkout__content--step__footer d-flex align-items-center">
 

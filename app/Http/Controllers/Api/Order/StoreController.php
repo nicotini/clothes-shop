@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Checkout;
+namespace App\Http\Controllers\Api\Order;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Order\StoreRequest;
+use App\Http\Requests\Api\Order\StoreRequest as OrderStoreRequest;
 use App\Service\CartService;
 use App\Service\OrderService;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StoreController extends Controller
 {
@@ -17,16 +18,20 @@ class StoreController extends Controller
         $this->orderService = $orderService;
         $this->cartService = $cartService;
     }
-
-    public function __invoke(StoreRequest $request)
+    public function __invoke(Request $request)
     {
-        $data = $request->validated();
         $cart =  $this->cartService->getCart();
-        if ($user = auth()->user()) {
+        if(Auth::guard('sanctum')->check()) {
+            $user = Auth::guard('sanctum')->user();
             $this->orderService->saveToDBAuthUser($cart, $user);
         } else {
+            $data = $request->validate([
+                'name' => 'required|string',
+                'email' => 'required|email',
+            ]);
             $this->orderService->saveToDatabase($data, $cart);
         }
-        return redirect()->route('checkout.success');
+        return response()->json(['message' => 'Your order created successfully']);
+        
     }
 }

@@ -8,9 +8,6 @@ use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     */
     protected $cartService;
     public function __construct(CartService $cartService)
     {
@@ -22,21 +19,16 @@ class IndexController extends Controller
         if (auth()->check()) {
             $user = auth()->user();
             $cart = $this->cartService->getCart();
-            $cartItems = $this->cartService->getCartItems($cart);
+            $cartItems = $cart->cartItems;
             $totalQuantity = $this->cartService->calculateTotalQuantity($cart);
             $totalSum = $this->cartService->calculateTotalSum($cart);
             return view('checkout.index', compact('cart', 'cartItems', 'totalQuantity', 'totalSum','user'));
         } else {
-
             $cart = $this->cartService->getCart();
-            $cartItems = $this->cartService->getCartItems($cart);
+            $cartItems = $cart->cartItems;
             $totalQuantity = $this->cartService->calculateTotalQuantity($cart);
             $totalSum = $this->cartService->calculateTotalSum($cart);
             return view('checkout.index', compact('cart', 'cartItems', 'totalQuantity', 'totalSum'));
         }
-
-
-
-        
     }
 }
